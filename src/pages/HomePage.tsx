@@ -22,7 +22,7 @@ export default function HomePage() {
                 </div>
 
                 {/* <Projects /> */}
-                <footer className="footer">Antonia Casariego Oronoz</footer>
+                <footer className="footer">Antonia Casariego Oronoz — work in progress</footer>
             </div>
         </div>
     );
