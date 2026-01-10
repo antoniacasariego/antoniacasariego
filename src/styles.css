@@ -1,0 +1,580 @@
+/* --------------------------------------------
+   FONTS
+   NOTE: make sure the format() matches the file type.
+   - .ttf  -> format("truetype")
+   - .woff2-> format("woff2")
+--------------------------------------------- */
+
+/* Inter from Google Fonts (keep if you want Inter without npm) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* Local display font */
+@font-face {
+  font-family: "Adieu";
+  src: url("/src/assets/Adieu-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/src/assets/HelveticaNeue.ttc") format("ttc");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Local font (you had format wrong before) */
+@font-face {
+  font-family: "Geomanist";
+  src: url("/src/assets/geomanist-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------
+   TOKENS
+--------------------------------------------- */
+:root{
+  --font-display: "Adieu", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-try: "Geomanist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --bg: #ffffff;
+  --ink: #1E293B;
+  --muted: #475569;
+  --card: #ffffff;
+  --border: #e5e7eb;
+
+  /* work cards (if you’re using Work.tsx styles from earlier) */
+  --cardBg: #F3F4F6;
+  --stroke: rgba(15,23,42,0.10);
+  --shadow: 0 10px 30px rgba(15,23,42,0.08);
+
+  --r-lg: 18px;
+  --r-md: 14px;
+
+  --container: 1100px;
+}
+
+*{ box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+body{
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page { display: flex; flex-direction: column; min-height: 100%; }
+
+.section { padding: 96px 0; }
+.hero    { padding-top: 48px; }
+
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Your existing helper classes */
+.h2{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 32px;
+  margin: 0 0 24px;
+}
+.h3{ font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+
+.grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+@media (max-width: 900px){
+  .grid{ grid-template-columns: 1fr; }
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.04);
+}
+
+.bullets{ margin: 8px 0 0 18px; color: var(--muted); }
+.bullets li{ margin: 6px 0; }
+
+.footer{
+  margin-top: auto;
+  padding: 40px 20px 80px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--muted);
+}
+.nav {
+  position: fixed;
+  top: 28px;
+  right: 40px;
+  display: flex;
+  gap: 28px;
+  z-index: 100;
+}
+
+.nav-link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  cursor: default;
+}
+
+.nav-link--active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.nav-link--disabled {
+  opacity: 0.5;
+}
+
+
+/* --------------------------------------------
+   HERO + CHARACTER
+--------------------------------------------- */
+
+.walker{
+  position: relative;
+  width: 100%;
+  height: 420px; /* matches CharacterWalker */
+}
+
+/* IMPORTANT:
+   Don’t set font-family on .walker unless CharacterWalker
+   is actually rendering the name text as DOM text.
+   If CharacterWalker draws text on a <canvas>, CSS won’t affect it.
+   In that case: pass the font string into the canvas context in CharacterWalker.
+*/
+
+.hero{
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.hero-inner{
+  position: relative;
+  margin-top: -120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Subtitle in Adieu (your request) */
+.hero-subtitle{
+  margin-top: -200px;
+  margin-bottom: 0px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400; /* Adieu-Regular */
+  color: var(--ink);
+  letter-spacing: 0.01em;
+  max-width: 800px;
+}
+
+/* Body in Inter */
+.hero-blurb{
+  margin-top: 10px;
+  margin-bottom: 200px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-family: var(--font-body);
+  max-width: 800px;
+  font-weight: 500;
+  text-align: center; /* looks cleaner under hero; change to left if you want */
+}
+
+@media (max-width: 640px){
+  .hero-inner{ margin-top: -80px; }
+  .hero-subtitle{ font-size: 16px; margin-top: 12px; }
+}
+
+/* =========================
+   WORK (Figma-style cards)
+   Drop this whole block into your CSS (replace your current work/fg-card styles)
+   ========================= */
+
+/* Make WORK section wider than the site default container */
+.work-section .container{
+  max-width: 1320px;   /* tweak: 1240–1400 to match your Figma */
+  padding: 0 32px;     /* a bit more breathing room like Figma */
+}
+
+.work-heading{
+  font-size: 40px;
+  font-weight: 500;
+  margin-bottom: 50px;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+
+/* List spacing */
+.work-list{
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+/* =========================
+   WORK (Figma-style cards) — FINAL (WITH YOUR TYPOGRAPHY)
+   Replace your current work/fg-* block with this
+   ========================= */
+
+/* Make WORK section wider than the site default container */
+.work-section .container{
+  max-width: 1320px;
+  padding: 0 32px;
+}
+
+.work-heading{
+  font-size: 40px;
+  font-weight: 500;
+  margin: 0 0 50px;
+  font-family: var(--font-display);
+  color: var(--ink);
+  text-transform: lowercase;
+}
+
+/* List spacing */
+.work-list{
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+/* =========================
+   CARD SHELL
+   ========================= */
+
+.fg-card{
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 0;                 /* no gap so right side can hug edge */
+  padding: 0;             /* no padding so image can sit flush */
+
+  border-radius: 15px;
+  background: #f2f3f5;
+
+  /* less “AI card” */
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+
+  text-decoration: none;
+  color: inherit;
+
+  overflow: hidden;
+  transition: box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.fg-card:hover{
+  border-color: rgba(15,23,42,0.14);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   LEFT COLUMN — TOP / CENTER / BOTTOM STRUCTURE
+   ========================= */
+
+.fg-left{
+  min-width: 0;
+  padding: 26px;              /* matches what you had */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* header top, blurb middle, meta bottom */
+}
+
+/* Header row */
+.fg-header{
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.fg-icon{
+  width: 48px;      /* your size */
+  height: 48px;     /* your size */
+  object-fit: contain;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.fg-titleBlock{ min-width: 0; }
+
+.fg-titleRow{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  line-height: 1.1;
+}
+
+/* ===== YOUR TYPOGRAPHY ===== */
+.fg-title{
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.fg-role{
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.fg-year{
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(15,23,42,0.36);
+}
+
+.fg-orgLine{
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+
+  /* keeps your “roomy” header feel */
+  margin-bottom: 36px;
+}
+
+/* =========================
+   CENTER BLURB (true middle)
+   ========================= */
+
+/* IMPORTANT:
+   Put your blurb in a <p class="fg-blurb">…</p>
+   so it can flex-center vertically */
+.fg-blurb{
+  margin: 0;                 /* reset */
+  padding: 10px 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 150ch;
+  font-weight: 400;
+
+  /* centers within the available middle space */
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+
+  /* keeps your “roomy” look without hardcoding spacing */
+  min-height: 50px;
+}
+
+/* =========================
+   TEAM / TOOLS (bottom)
+   ========================= */
+
+.fg-metaRow{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 18px;
+}
+
+.fg-metaLabel{
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.fg-metaValue{
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* =========================
+   RIGHT COLUMN — keep content on the RIGHT, don’t stretch
+   ========================= */
+
+   .fg-right{
+    min-width: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+  
+  /* Recurrency single image:
+     IMPORTANT: don't let it stretch to full column width */
+  .fg-shot{
+    flex: 0 0 auto;     /* prevents stretching */
+    width: 515px;       /* pick what matches your figma */
+    height: 290px;      /* stable figure-like block */
+    object-fit: cover;
+  
+    border-radius: 10px;
+    box-shadow: 15px 15px 22px rgba(15,23,42,0.10);
+    
+  }
+  
+  /* =========================
+     INNOVATION COLLAGE — “tiles floating on the right”
+     (3 sketches top, phones bottom)
+     ========================= */
+  
+/* Wrapper: allow content to touch the card edge */
+.fg-shotWrap{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;   /* right edge */
+  align-items: flex-end;       /* bottom edge */
+  padding: 18px 0 0px 0px;   /* left air only */
+}
+
+/* IMPORTANT: shrink to content so there is no "empty box" on the right */
+.fg-collage{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end; /* KEY: bottom stack */
+  gap: 16px;
+
+  height: 100%;              /* KEY: allow bottom alignment inside wrap */
+  width: fit-content;
+}
+
+
+/* rows should also shrink to content */
+.fg-collageTop{
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  width: fit-content;
+}
+
+.fg-collageBottom{
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 18px;
+
+  width: fit-content;
+  margin-bottom: -25px; /* tiny nudge to visually “touch” bottom border */
+}
+
+.fg-sketch{
+  width: 190px;            /* tune */
+  height: 120px;           /* tune */
+  object-fit: contain;     /* IMPORTANT: no cropping */
+  border-radius: 14px;
+  background: transparent; /* or white if you want */
+  display: block;
+}
+
+
+/* BIG phone image that touches the right edge */
+.fg-phoneBig{
+  width: 500px;          /* tune: 520–620 */
+  height: 310px;         /* tune */
+  object-fit: cover;
+  margin-right: 0;       /* ensure flush */
+  border-radius: 0;      /* optional, since it’s inside card edge */
+  background: transparent;
+  justify-content: flex-end;
+  display: block;
+  
+}
+  /* =========================
+     NO RIGHT COLUMN (Build Lab)
+     ========================= */
+  
+  .fg-card--noRight{
+    grid-template-columns: 1fr;
+  }
+  
+  
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 980px){
+  .fg-shotWrap{
+    padding: 0 22px 22px;
+    justify-content: flex-start;
+  }
+
+  .fg-shot{
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .fg-collage{
+    align-items: flex-start;
+  }
+
+  .fg-collageTop,
+  .fg-collageBottom{
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .work-section .container{
+    max-width: 1100px;
+    padding: 0 20px;
+  }
+
+  .fg-card{
+    grid-template-columns: 1.25fr 0.75fr; /* slightly narrower image column like Figma */
+  }
+
+  .fg-left{
+    padding: 22px;
+    gap: 18px;
+    justify-content: flex-start; /* reads better stacked */
+  }
+
+  .fg-blurb{
+    display: block;  /* don’t force vertical centering on mobile */
+    padding: 0;
+    min-height: unset;
+  }
+
+  .fg-right{
+    justify-content: flex-start;
+  }
+
+  .fg-shotWrap{
+    padding: 0 22px 22px;
+    justify-content: flex-start;
+  }
+
+  .fg-shot,
+  .fg-shotPlaceholder{
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 10px 22px rgba(15,23,42,0.10);
+  }
+
+  .fg-collage{
+    padding: 0 22px 22px;
+  }
+}
