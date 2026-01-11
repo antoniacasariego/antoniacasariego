@@ -146,17 +146,15 @@ body{
 
 .nav-link--disabled {
   opacity: 0.5;
-  cursor: not-allowed;
+  cursor: auto;
   
 }
 .nav-link--disabled:hover::after {
-  content: "Coming Soon";
+  content: "coming soon";
   position: absolute;
   bottom: -30px; /* Adjusted to position below the link */
-  left: 80px; /* Align to the left of the link */
+  left: 75px; /* Align to the left of the link */
   background: rgba(0, 0, 0, 0.7);
-  content: "Coming Soon";
-  position: absolute;
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -340,12 +338,13 @@ body{
 }
 
 .fg-card:hover::after {
-  content: "Coming Soon";
+  content: "case study coming soon";
+  align-items: center;
   position: absolute;
   bottom: 10px; /* Adjust as needed */
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.272);
   color: white;
   padding: 5px 10px;
   border-radius: 5px;

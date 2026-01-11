@@ -65,7 +65,7 @@ export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
       </a>
 
       <span className="nav-link nav-link--disabled">
-        About me
+        About
       </span>
     </nav>
   );
