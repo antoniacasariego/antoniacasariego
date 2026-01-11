@@ -1,9 +1,8 @@
-// src/components/Navbar.tsx
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 type NavbarProps = {
-  onHomeClick: () => void;
-  onWorkClick: () => void;
+  onHomeClick?: () => void;
+  onWorkClick?: () => void;
 };
 
 export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
@@ -19,13 +18,14 @@ export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
     e.preventDefault();
 
     if (isHomeRoute) {
-      // clear hash so home becomes "active" again
       if (location.hash) navigate("/", { replace: true });
-      onHomeClick();
+      // if no prop provided, still scroll
+      (onHomeClick ?? (() => window.scrollTo({ top: 0, behavior: "smooth" })))();
     } else {
       navigate("/");
-      // allow route to render then scroll
-      setTimeout(() => onHomeClick(), 0);
+      setTimeout(() => {
+        (onHomeClick ?? (() => window.scrollTo({ top: 0, behavior: "smooth" })))();
+      }, 0);
     }
   };
 
@@ -34,10 +34,15 @@ export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
 
     if (isHomeRoute) {
       if (location.hash !== "#work") navigate("/#work", { replace: true });
-      onWorkClick();
+      // if no prop provided, scroll to id directly
+      (onWorkClick ??
+        (() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth", block: "start" })))();
     } else {
       navigate("/#work");
-      setTimeout(() => onWorkClick(), 0);
+      setTimeout(() => {
+        (onWorkClick ??
+          (() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth", block: "start" })))();
+      }, 0);
     }
   };
 
@@ -54,18 +59,14 @@ export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
       <a
         href="/#work"
         onClick={handleWork}
-        className={
-          isWorkHashActive || isWorkDetail ? "nav-link nav-link--active" : "nav-link"
-        }
+        className={isWorkHashActive || isWorkDetail ? "nav-link nav-link--active" : "nav-link"}
       >
         Work
       </a>
 
       <NavLink
         to="/about"
-        className={({ isActive }) =>
-          isActive ? "nav-link nav-link--active" : "nav-link"
-        }
+        className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}
       >
         About me
       </NavLink>
