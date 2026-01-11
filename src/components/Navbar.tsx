@@ -64,12 +64,9 @@ export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
         Work
       </a>
 
-      <NavLink
-        to="/about"
-        className={({ isActive }) => (isActive ? "nav-link nav-link--active" : "nav-link")}
-      >
+      <span className="nav-link nav-link--disabled">
         About me
-      </NavLink>
+      </span>
     </nav>
   );
 }

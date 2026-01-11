@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import type { WorkItem } from "../data/work";
 
@@ -16,10 +15,25 @@ export default function WorkCard({ item }: Props) {
 
   const hasRight = hasSingle || hasCollage;
 
+  const disabled = true; // <-- flip to false later
+
+  const stopNav = (e: React.SyntheticEvent) => {
+    if (!disabled) return;
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <Link
       to={`/work/${item.slug}`}
       className={`fg-card ${!hasRight ? "fg-card--noRight" : ""}`}
+      onClick={stopNav}
+      onKeyDown={(e) => {
+        if (!disabled) return;
+        if (e.key === "Enter" || e.key === " ") stopNav(e);
+      }}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
     >
       {/* LEFT */}
       <div className="fg-left">
@@ -41,7 +55,7 @@ export default function WorkCard({ item }: Props) {
 
         <p className="fg-blurb">{item.oneLiner}</p>
 
-        {(item.team || item.tools) ? (
+        {item.team || item.tools ? (
           <div className="fg-metaRow">
             {item.team ? (
               <div className="fg-metaBlock">
@@ -78,22 +92,18 @@ export default function WorkCard({ item }: Props) {
                 </div>
 
                 <div className="fg-collageBottom">
-                {(item.collageBottom ?? []).slice(0, 3).map((src, i) => (
+                  {(item.collageBottom ?? []).slice(0, 3).map((src, i) => (
                     <img
-                    key={src}
-                    className={(item.collageBottom?.length ?? 0) === 1 ? "fg-phoneBig" : "fg-phone"}
-                    src={src}
-                    alt={`${item.title} prototype ${i + 1}`}
+                      key={src}
+                      className={(item.collageBottom?.length ?? 0) === 1 ? "fg-phoneBig" : "fg-phone"}
+                      src={src}
+                      alt={`${item.title} prototype ${i + 1}`}
                     />
-                ))}
+                  ))}
                 </div>
               </div>
             ) : (
-              <img
-                className="fg-shot"
-                src={item.previews![0]}
-                alt={`${item.title} preview`}
-              />
+              <img className="fg-shot" src={item.previews![0]} alt={`${item.title} preview`} />
             )}
           </div>
         </div>
