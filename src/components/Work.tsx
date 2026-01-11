@@ -1,10 +1,10 @@
-
+// src/components/Work.tsx (or wherever it lives)
 import { workItems } from "../data/work";
 import WorkCard from "../components/WorkCard";
 
 export default function Work() {
   return (
-    <section className="section work-section" id="work">
+    <section className="section work-section">
       <div className="container">
         <h2 className="work-heading">work</h2>
 

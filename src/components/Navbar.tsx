@@ -1,38 +1,74 @@
-import { NavLink, useLocation } from "react-router-dom";
+// src/components/Navbar.tsx
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+type NavbarProps = {
+  onHomeClick: () => void;
+  onWorkClick: () => void;
+};
+
+export default function Navbar({ onHomeClick, onWorkClick }: NavbarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const isWorkActive =
-    location.pathname.startsWith("/work");
+  const isHomeRoute = location.pathname === "/";
+  const isWorkHashActive = isHomeRoute && location.hash === "#work";
+  const isWorkDetail = location.pathname.startsWith("/work/");
+  const isHomeActive = isHomeRoute && !isWorkHashActive;
+
+  const handleHome = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (isHomeRoute) {
+      // clear hash so home becomes "active" again
+      if (location.hash) navigate("/", { replace: true });
+      onHomeClick();
+    } else {
+      navigate("/");
+      // allow route to render then scroll
+      setTimeout(() => onHomeClick(), 0);
+    }
+  };
+
+  const handleWork = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (isHomeRoute) {
+      if (location.hash !== "#work") navigate("/#work", { replace: true });
+      onWorkClick();
+    } else {
+      navigate("/#work");
+      setTimeout(() => onWorkClick(), 0);
+    }
+  };
 
   return (
     <nav className="nav">
-      {/* HOME */}
-      <NavLink
-        to="/"
-        end
-        className={({ isActive }) =>
-          isActive && !isWorkActive
-            ? "nav-link nav-link--active"
-            : "nav-link"
-        }
+      <a
+        href="/"
+        onClick={handleHome}
+        className={isHomeActive ? "nav-link nav-link--active" : "nav-link"}
       >
         Home
-      </NavLink>
+      </a>
 
-      {/* WORK (logical, not literal route yet) */}
-    <NavLink
-        to="/#work"
-        className="nav-link"
-    >
+      <a
+        href="/#work"
+        onClick={handleWork}
+        className={
+          isWorkHashActive || isWorkDetail ? "nav-link nav-link--active" : "nav-link"
+        }
+      >
         Work
-    </NavLink>
+      </a>
 
-      {/* ABOUT (placeholder for now) */}
-      <span className="nav-link nav-link--disabled">
+      <NavLink
+        to="/about"
+        className={({ isActive }) =>
+          isActive ? "nav-link nav-link--active" : "nav-link"
+        }
+      >
         About me
-      </span>
+      </NavLink>
     </nav>
   );
 }

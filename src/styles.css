@@ -125,7 +125,8 @@ body{
   right: 40px;
   display: flex;
   gap: 28px;
-  z-index: 100;
+  z-index: 9999;        /* higher than anything */
+  pointer-events: auto; /* ensure it can receive clicks */
 }
 
 .nav-link {
@@ -134,7 +135,8 @@ body{
   font-weight: 500;
   color: var(--muted);
   text-decoration: none;
-  cursor: default;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .nav-link--active {
@@ -144,8 +146,39 @@ body{
 
 .nav-link--disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
+/* =========================
+   CLICK FIX: Nav must always win
+   ========================= */
+
+/* Navbar always above everything */
+.nav {
+  position: fixed;
+  z-index: 2147483647; /* max */
+}
+
+/* Keep hero/walker layer below the navbar */
+.hero,
+.hero-inner,
+.walker {
+  position: relative;
+  z-index: 0;
+}
+
+/* The walker is a big overlay; don't let it steal clicks */
+.walker {
+  pointer-events: none;
+}
+
+/* Re-enable pointer events only on the parts you might need interactive */
+.walker img,
+.walker svg,
+.walker .star-twinkle,
+.walker [aria-label="character"] {
+  pointer-events: auto;
+}
 
 /* --------------------------------------------
    HERO + CHARACTER
