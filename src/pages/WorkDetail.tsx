@@ -1,125 +1,210 @@
 
 import { useParams, Navigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { workItems } from "../data/work";
 import type { WorkItem } from "../data/work";
 import Navbar from "../components/Navbar";
 
+const RECURRENCY_PASSWORD = "antonia2026"; // TODO: Move to env variable
+
 export default function WorkDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const [password, setPassword] = useState("");
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [error, setError] = useState("");
 
   const item: WorkItem | undefined = workItems.find((w) => w.slug === slug);
   if (!item) return <Navigate to="/" replace />;
 
-  const rightVariant =
-    item.rightVariant ?? (item.previews?.[0] ? "single" : undefined);
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const hasCollage =
-    rightVariant === "collage" &&
-    (item.collageTop?.length || item.collageBottom?.length);
+  const handleUnlock = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === RECURRENCY_PASSWORD) {
+      setIsUnlocked(true);
+      setError("");
+    } else {
+      setError("Incorrect password. Please try again.");
+    }
+  };
 
-  const hasSingle = rightVariant === "single" && !!item.previews?.[0];
-  const hasRight = hasCollage || hasSingle;
+  // Check if this is Recurrency and requires password
+  const requiresPassword = item.slug === "recurrency";
+  const showCaseStudy = !requiresPassword || isUnlocked;
 
   return (
     <>
-      {/* Top navigation */}
       <Navbar />
 
-      <div className={["fg-card", !hasRight ? "fg-card--noRight" : ""].join(" ")}>
-        <div className="fg-left">
-          <div className="fg-header">
-            {item.icon ? (
+      <div className="work-detail-container">
+        {/* Header with icon and title inline - in glass container */}
+        <div className="case-study-header-container">
+          <div className="case-study-header">
+            {item.icon && (
               <img
-                className="fg-icon"
+                className="case-study-icon"
                 src={item.icon}
                 alt={`${item.title} icon`}
               />
-            ) : null}
-
-            <div className="fg-titleBlock">
-              <div className="fg-titleRow">
-                <span className="fg-title">{item.title}</span>
-                <span className="fg-role">{item.role}</span>
-                <span className="fg-year">{item.year}</span>
+            )}
+            <div className="case-study-title-block">
+              <div className="case-study-title-row">
+                <span className="case-study-title">{item.title}</span>
+                <span className="case-study-role">{item.role}</span>
+                <span className="case-study-year">{item.year}</span>
               </div>
-
-              {item.orgLine ? (
-                <div className="fg-orgLine">{item.orgLine}</div>
-              ) : null}
+              {item.orgLine && <div className="case-study-org">{item.orgLine}</div>}
             </div>
-          </div>
-
-          <p className="fg-blurb">{item.oneLiner}</p>
-
-          {item.team || item.tools ? (
-            <div className="fg-metaRow">
-              {item.team ? (
-                <div className="fg-metaBlock">
-                  <div className="fg-metaLabel">TEAM</div>
-                  <div className="fg-metaValue">{item.team}</div>
-                </div>
-              ) : null}
-
-              {item.tools ? (
-                <div className="fg-metaBlock">
-                  <div className="fg-metaLabel">TOOLS</div>
-                  <div className="fg-metaValue">{item.tools}</div>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          <div style={{ marginTop: 18 }}>
-            <Link to="/" style={{ color: "inherit" }}>
-              ← back
-            </Link>
           </div>
         </div>
 
-        {hasRight ? (
-          <div className="fg-right">
-            <div className="fg-shotWrap">
-              {hasCollage ? (
-                <div className="fg-collage">
-                  <div className="fg-collageTop">
-                    {(item.collageTop ?? []).slice(0, 3).map((src, i) => (
-                      <img
-                        key={src}
-                        className="fg-sketch"
-                        src={src}
-                        alt={`${item.title} sketch ${i + 1}`}
-                      />
-                    ))}
-                  </div>
+        {/* Title and description - outside glass container */}
+        <div className="case-study-intro">
+          <h1 className="case-study-main-title">Daily Workflow</h1>
+          <p className="case-study-description-line">
+            Guided prioritization for time-sensitive inventory decisions
+          </p>
+          <p className="case-study-description-blurb">
+            At Recurrency, customers receive hundreds of replenishment recommendations across items and locations. As a product design intern, I worked on designing a daily workflow that prioritizes time-sensitive and high-risk items — so users can confidently decide where to start, without being overwhelmed by volume.
+          </p>
+        </div>
 
-                  <div
-                    className={[
-                      "fg-collageBottom",
-                      (item.collageBottom?.length ?? 0) === 1
-                        ? "fg-collageBottom--single"
-                        : "",
-                    ].join(" ")}
-                  >
-                    {(item.collageBottom ?? []).slice(0, 3).map((src, i) => (
-                      <img
-                        key={src}
-                        className="fg-phone"
-                        src={src}
-                        alt={`${item.title} prototype ${i + 1}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <img
-                  className="fg-shot"
-                  src={item.previews![0]}
-                  alt={`${item.title} preview`}
-                />
-              )}
+        {/* Public metadata - outside glass container */}
+        <div className="case-study-meta-grid">
+          <div className="case-study-meta-item">
+            <div className="case-study-meta-label">ROLE</div>
+            <div className="case-study-meta-value">Sole Product Designer</div>
+          </div>
+          <div className="case-study-meta-item">
+            <div className="case-study-meta-label">DURATION</div>
+            <div className="case-study-meta-value">
+              12 Weeks — released September 2025
             </div>
           </div>
-        ) : null}
+          {item.team && (
+            <div className="case-study-meta-item">
+              <div className="case-study-meta-label">TEAM</div>
+              <div className="case-study-meta-value">{item.team}</div>
+            </div>
+          )}
+          {item.tools && (
+            <div className="case-study-meta-item">
+              <div className="case-study-meta-label">TOOLS</div>
+              <div className="case-study-meta-value">{item.tools}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Password gate or case study content */}
+        {requiresPassword && !isUnlocked ? (
+          <div className="password-gate">
+            <form onSubmit={handleUnlock} className="password-form">
+              <h2 className="password-title">UNLOCK CASE STUDY</h2>
+              <p className="password-description">
+                If you don't have access and have questions, please reach out!
+              </p>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="password-input"
+              />
+              {error && <p className="password-error">{error}</p>}
+              <button type="submit" className="password-submit">
+                Unlock
+              </button>
+            </form>
+          </div>
+        ) : (
+          showCaseStudy && (
+            <div className="case-study-content">
+              {/* Context Section */}
+              <section className="case-study-section">
+                <h3 className="section-label">CONTEXT</h3>
+                <p className="section-text">
+                  The existing Planning table gave users full visibility into recommendations, but required manual filtering and interpretation to determine what needed attention today.
+                </p>
+              </section>
+
+              {/* Challenge Section */}
+              <section className="case-study-section">
+                <h3 className="section-label">THE CHALLENGE</h3>
+                <p className="section-text challenge-statement">
+                  Introducing focus without removing control: giving users an intuitive entry point preserving transparency and trust in the system.
+                </p>
+                <p className="section-text">
+                  Research and conversations with planners, Customer Success, and Solutions teams uncovered an important distinction: users could disagree with a recommendation and still need to review it urgently.
+                </p>
+                <p className="section-text">
+                  Existing workflows assumed that review priority should reflect agreement. In practice, planners needed a way to surface items based on risk, timing, and business impact, regardless of whether they ultimately accepted or overrode the recommendation.
+                </p>
+              </section>
+
+              {/* Solutions Section */}
+              <section className="case-study-section">
+                <h3 className="section-label">SOLUTIONS</h3>
+                <p className="section-text solution-statement">
+                  A daily workflow designed to help planners confidently prioritize time-sensitive inventory decisions focusing on what to review, and, most importantly, why.
+                </p>
+
+                {/* Workflow sketches */}
+                <div className="workflow-sketches">
+                  <img
+                    src="/work/rec_case_1.png"
+                    alt="Daily workflow overview"
+                    className="workflow-image"
+                  />
+                </div>
+              </section>
+
+              {/* Additional Sections */}
+              <section className="case-study-section feature-section">
+                <h3 className="feature-title">Deliberate, item-by-item actions</h3>
+                <p className="section-text">
+                  Bulk actions were intentionally excluded. Each surfaced item is meant to be reviewed individually, reinforcing trust and preventing over-automation of critical items.
+                </p>
+              </section>
+
+              <section className="case-study-section feature-section">
+                <h3 className="feature-title">Focused daily queue with rule-driven prioritization</h3>
+                <p className="section-text">
+                  Instead of scanning the full Planning table, users start their day with a short, curated list. The idea was to emphasize momentum and completion, helping teams build a consistent review habit.
+                </p>
+                <p className="section-text">
+                  Daily Workflow is powered by a small set of configurable validation rules. Those rules encode each customer's operational priorities, surfacing only inventory items that are both relevant to their business, urgent, and actionable.
+                </p>
+              </section>
+
+              <section className="case-study-section feature-section">
+                <h3 className="feature-title">Context-rich item review with AI-powered gut check</h3>
+                <p className="section-text">
+                  Each item includes key data and a plain-language explanation for why it appears, reducing the need to cross-reference multiple views or panels.
+                </p>
+              </section>
+
+              <section className="case-study-section feature-section">
+                <h3 className="feature-title">Path to gradual automation</h3>
+                <p className="section-text">
+                  Repeated unmodified acceptances can be flagged for optional automation, allowing routine decisions to be delegated while keeping users in control of the underlying logic.
+                </p>
+              </section>
+
+              <div style={{ marginTop: 64, textAlign: "center" }}>
+                <Link to="/" style={{ color: "inherit", textDecoration: "none", fontSize: "20px" }}>
+                  ←
+                </Link>
+              </div>
+            </div>
+          )
+        )}
+
+        <footer className="footer">
+          Antonia Casariego Oronoz — work in progress!
+        </footer>
       </div>
     </>
   );

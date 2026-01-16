@@ -15,7 +15,8 @@ export default function WorkCard({ item }: Props) {
 
   const hasRight = hasSingle || hasCollage;
 
-  const disabled = true; // <-- flip to false later
+  // Only enable Recurrency for now
+  const disabled = item.slug !== "recurrency";
 
   const stopNav = (e: React.SyntheticEvent) => {
     if (!disabled) return;
