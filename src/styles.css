@@ -720,7 +720,7 @@ body{
 
 .case-study-org {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--muted);
 }
@@ -742,7 +742,7 @@ body{
 
 .case-study-description-line {
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #25958f;
   margin: 0 0 16px 0;
@@ -778,7 +778,7 @@ body{
 }
 
 .case-study-meta-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #25958f;
@@ -787,10 +787,11 @@ body{
 }
 
 .case-study-meta-value {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--ink);
   margin-bottom: 50px;
+  white-space: nowrap;
 }
 
 /* Password gate */
@@ -884,6 +885,14 @@ body{
 
 .case-study-section {
   margin-bottom: 44px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.case-study-section.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .intro-section {
@@ -927,7 +936,7 @@ body{
 }
 
 .section-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: #25958f;
@@ -937,7 +946,7 @@ body{
 }
 
 .section-text {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 400;
   color: var(--ink);
   line-height: 1.6;
@@ -957,13 +966,63 @@ body{
 
 .workflow-sketches {
   margin-top: 32px;
+  margin-bottom: 32px;
   text-align: center;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.workflow-sketches.visible {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .workflow-image {
-  max-width: 70%;
+  width: 85%;
   height: auto;
   border-radius: 12px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Back arrow */
+.back-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--ink);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.back-arrow-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #25958f;
+  transform: translateX(-3px);
+}
+
+/* Learning items */
+.learning-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.learning-number {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  color: #25958f;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.learning-item .section-text {
+  margin: 0;
 }
 
 /* Feature sections */
